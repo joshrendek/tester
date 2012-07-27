@@ -1,22 +1,20 @@
-# config/deploy.rb 
 require "bundler/capistrano"
 
 set :scm,             :git
-set :repository,      "git@codeplane.com:you/my_site.git"
+set :repository,      "git@github.com:bluescripts/tester.git"
 set :branch,          "origin/master"
 set :migrate_target,  :current
 set :ssh_options,     { :forward_agent => true }
 set :rails_env,       "production"
-set :deploy_to,       "/home/deployer/apps/my_site"
+set :deploy_to,       "/home/ubuntu/apps/tester"
 set :normalize_asset_timestamps, false
 
-set :user,            "deployer"
-set :group,           "staff"
+set :user,            "ubuntu"
+set :group,           "ubuntu"
 set :use_sudo,        false
 
-role :web,    "123.456.789.012"
-role :app,    "123.456.789.012"
-role :db,     "123.456.789.012", :primary => true
+role :web,    "192.168.5.113"
+role :db,     "192.168.5.113", :primary => true
 
 set(:latest_release)  { fetch(:current_path) }
 set(:release_path)    { fetch(:current_path) }
@@ -28,11 +26,10 @@ set(:previous_revision) { capture("cd #{current_path}; git rev-parse --short HEA
 
 default_environment["RAILS_ENV"] = 'production'
 
-# Use our ruby-1.9.2-p290@my_site gemset
-default_environment["PATH"]         = "--"
-default_environment["GEM_HOME"]     = "--"
-default_environment["GEM_PATH"]     = "--"
-default_environment["RUBY_VERSION"] = "ruby-1.9.2-p290"
+default_environment["PATH"]         = "/home/ubuntu/.rvm/gems/ruby-1.9.3-p194/bin:/home/ubuntu/.rvm/gems/ruby-1.9.3-p194@global/bin:/home/ubuntu/.rvm/rubies/ruby-1.9.3-p194/bin:/home/ubuntu/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
+default_environment["GEM_HOME"]     = "/home/ubuntu/.rvm/gems/ruby-1.9.3-p194"
+default_environment["GEM_PATH"]     = "/home/ubuntu/.rvm/gems/ruby-1.9.3-p194:/home/ubuntu/.rvm/gems/ruby-1.9.3-p194@global"
+default_environment["RUBY_VERSION"] = "ruby-1.9.3-p194"
 
 default_run_options[:shell] = 'bash'
 
@@ -101,7 +98,7 @@ namespace :deploy do
 
   desc "Zero-downtime restart of Unicorn"
   task :restart, :except => { :no_release => true } do
-    run "kill -s USR2 `cat /tmp/unicorn.my_site.pid`"
+    run "kill -s USR2 `cat /tmp/unicorn.tester.pid`"
   end
 
   desc "Start unicorn"
@@ -111,7 +108,7 @@ namespace :deploy do
 
   desc "Stop unicorn"
   task :stop, :except => { :no_release => true } do
-    run "kill -s QUIT `cat /tmp/unicorn.my_site.pid`"
+    run "kill -s QUIT `cat /tmp/unicorn.tester.pid`"
   end  
 
   namespace :rollback do

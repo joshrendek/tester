@@ -27,8 +27,6 @@ if env == "production"
   # "current" directory that Capistrano sets up.
   working_directory "/home/#{deploy_user}/apps/#{site}/current"
 
-  # feel free to point this anywhere accessible on the filesystem
-  user deploy_user, 'staff'
   shared_path = "/home/#{deploy_user}/apps/#{site}/shared"
 
   stderr_path "#{shared_path}/log/unicorn.stderr.log"
